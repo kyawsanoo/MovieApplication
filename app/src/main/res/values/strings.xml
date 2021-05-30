@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Movie Application</string>
+    <string name="title_activity_bottom_navigation">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_favourite">Favorite</string>
+    <string name="title_search">Search</string>
+    <string name="title_activity_main">MainActivity</string>
+</resources>

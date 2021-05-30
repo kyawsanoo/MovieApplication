@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="mm.kso.movieapplication.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home_to_movies"
+            app:destination="@id/navigation_movies"
+            />
+        <action
+            android:id="@+id/action_home_to_movieDetails"
+            app:destination="@id/navigation_movie_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_favourite"
+        android:name="mm.kso.movieapplication.ui.favourite.FavoriteFragment"
+        android:label="@string/title_favourite"
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_favorite_to_movieDetails"
+            app:destination="@id/navigation_movie_detail" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="mm.kso.movieapplication.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchMovies_to_movieDetails"
+            app:destination="@id/navigation_movie_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_movies"
+        android:name="mm.kso.movieapplication.ui.movies.MoviesFragment"
+        android:label="Movies">
+        <argument
+            android:name="movieCategory"
+            android:defaultValue="Popular"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_movies_to_movieDetails"
+            app:destination="@id/navigation_movie_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_movie_detail"
+        android:name="mm.kso.movieapplication.ui.detail.MovieDetailsFragment"
+        android:label="MovieDetails"
+        app:exitAnim="@android:anim/slide_out_right"
+        >
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_movie_details_to_actorDetails"
+            app:destination="@id/navigation_actor_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_actor_details"
+        android:name="mm.kso.movieapplication.ui.detail.ActorDetailsFragment"
+        android:label="ActorDetails">
+        <action
+            android:id="@+id/action_actor_details_to_movieDetails"
+            app:destination="@id/navigation_movie_detail" />
+        <argument
+            android:name="personId"
+            app:argType="integer" />
+    </fragment>
+
+</navigation>
