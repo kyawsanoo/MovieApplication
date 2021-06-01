@@ -62,11 +62,11 @@ public class FavoriteFragment extends Fragment {
             public void onChanged(List<FavoriteMovie> favoriteMovies) {
                 if (favoriteMovies.size() == 0 || favoriteMovies == null){
                     binding.placeHolderText.setVisibility(View.VISIBLE);
-                    binding.noItemsPlaceHolder.setVisibility(View.VISIBLE);
+                    binding.clearFavList.setVisibility(View.GONE);
                 }
                 else{
                     binding.placeHolderText.setVisibility(View.GONE);
-                    binding.noItemsPlaceHolder.setVisibility(View.GONE);
+                    binding.clearFavList.setVisibility(View.VISIBLE);
                     adapter.setMoviesList(favoriteMovies);
                     moviesList = favoriteMovies;
                 }

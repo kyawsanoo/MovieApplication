@@ -8,45 +8,24 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/cardview_light_background">
-
-            <TextView
-                android:id="@+id/favListText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:text="Your Favorite List"
-                android:textColor="@color/purple_200"
-                android:textSize="16sp"
-                android:textStyle="normal" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/favListRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/favListText"
                 android:layout_margin="10dp" />
-
-            <ImageView
-                android:id="@+id/noItemsPlaceHolder"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_no_items"
-                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/placeHolderText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/noItemsPlaceHolder"
-                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:text="No items in your Favorite List !"
                 android:textColor="@color/purple_200"
-                android:textSize="12sp"
+                android:textSize="16sp"
                 android:textStyle="normal"
                 android:visibility="gone" />
 
@@ -62,6 +41,7 @@
             android:foregroundGravity="center"
             android:src="@drawable/ic_delete"
             app:tint="@color/white"
-            app:borderWidth="0dp" />
+            app:borderWidth="0dp"
+            android:visibility="gone"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

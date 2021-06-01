@@ -2,7 +2,9 @@ package mm.kso.movieapplication.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -22,13 +24,22 @@ public class Constants {
     public static final String Current = "Current";
     public static final String TopRated = "TopRated";
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkCapabilities mCapabilities = mConnectivityManager.getNetworkCapabilities(mConnectivityManager.getActiveNetwork());
-        return mCapabilities != null &&
-                (mCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                        mCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR));
+        ConnectivityManager connMgr =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        boolean isWifiConn = false;
+        boolean isMobileConn = false;
+        for (Network network : connMgr.getAllNetworks()) {
+            NetworkInfo networkInfo = connMgr.getNetworkInfo(network);
+            if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                isWifiConn |= networkInfo.isConnected();
+            }
+            if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                isMobileConn |= networkInfo.isConnected();
+            }
+        }
+        return isMobileConn || isWifiConn;
     }
 
 

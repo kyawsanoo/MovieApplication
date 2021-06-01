@@ -61,14 +61,17 @@ public class HomeFragment extends Fragment {
         map.put("api_key", Constants.API_KEY);
         map.put("page", "1");
         observeData();
-        getMoviesList();
         setUpRecyclerViewsAndViewPager();
         setUpOnclick();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onStart() {
         super.onStart();
+        if(Constants.isNetworkAvailable(requireContext())){
+            getMoviesList();
+        }
     }
 
     private void setUpRecyclerViewsAndViewPager() {
