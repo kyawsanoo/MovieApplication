@@ -3,6 +3,7 @@ package mm.kso.movieapplication.ui.detail;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -55,6 +56,7 @@ public class ActorDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
 
         ActorDetailsFragmentArgs args = ActorDetailsFragmentArgs.fromBundle(getArguments());
         personID = args.getPersonId();
@@ -99,5 +101,13 @@ public class ActorDetailsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            requireActivity().onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
