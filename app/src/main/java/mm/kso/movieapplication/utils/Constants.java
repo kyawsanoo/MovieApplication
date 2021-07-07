@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 public class Constants {
 
-    public static final String API_KEY = "db85bc6bf1d96e2f47ac91af80e1d717";
     public static final String BaseURL = "https://api.themoviedb.org/3/";
     public static final String ImageBaseURL = "https://image.tmdb.org/t/p/original";
     public static final String ImageBaseURLw500 = "https://image.tmdb.org/t/p/w500";

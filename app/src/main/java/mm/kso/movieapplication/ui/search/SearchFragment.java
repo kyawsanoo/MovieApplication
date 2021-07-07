@@ -50,7 +50,6 @@ public class SearchFragment extends Fragment {
 
         queryMap = new HashMap<>();
 
-        queryMap.put("api_key", Constants.API_KEY);
         queryMap.put("query",queryText);
 
         initRecyclerView();
@@ -63,7 +62,7 @@ public class SearchFragment extends Fragment {
 
                 queryText = binding.searchKeyword.getText().toString().trim().toLowerCase();
                 queryMap.clear();
-                queryMap.put("api_key", Constants.API_KEY);
+                //queryMap.put("api_key", BuildConfig.MOVIE_API_KEY);
                 queryMap.put("query",queryText);
 
                 viewModel.getQueriedMovies(queryMap);
@@ -75,7 +74,7 @@ public class SearchFragment extends Fragment {
                 if(actionId == EditorInfo.IME_ACTION_SEARCH){
                     queryText = binding.searchKeyword.getText().toString().trim().toLowerCase();
                     queryMap.clear();
-                    queryMap.put("api_key", Constants.API_KEY);
+                    //queryMap.put("api_key", BuildConfig.MOVIE_API_KEY);
                     queryMap.put("query",queryText);
 
                     viewModel.getQueriedMovies(queryMap);

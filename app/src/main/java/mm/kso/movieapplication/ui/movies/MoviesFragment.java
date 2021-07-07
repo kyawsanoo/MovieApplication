@@ -51,7 +51,6 @@ public class MoviesFragment extends Fragment {
         MoviesFragmentArgs args = MoviesFragmentArgs.fromBundle(getArguments());
         moviesCategory = args.getMovieCategory();
 
-        map.put("api_key", Constants.API_KEY);
         map.put("page","1");
 
         initRecyclerView();

@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import mm.kso.movieapplication.BuildConfig;
 import mm.kso.movieapplication.R;
 import mm.kso.movieapplication.utils.Constants;
 import mm.kso.movieapplication.adapters.CastAdapter;
@@ -85,7 +86,7 @@ public class MovieDetailsFragment extends Fragment{
         movieId = args.getMovieId();
 
         observeData();
-        queryMap.put("api_key", Constants.API_KEY);
+        //queryMap.put("api_key", BuildConfig.MOVIE_API_KEY);
         queryMap.put("page","1");
         queryMap.put("append_to_response","videos");
 
