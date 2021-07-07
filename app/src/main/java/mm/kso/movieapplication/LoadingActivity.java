@@ -1,6 +1,7 @@
 package mm.kso.movieapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
@@ -22,7 +23,10 @@ public class LoadingActivity extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                finish();
+                Intent i=new Intent(LoadingActivity.this, MainActivity.class);
+                startActivity(i);
+                finish();            }
+               
             }
         }, 4600);
     }
