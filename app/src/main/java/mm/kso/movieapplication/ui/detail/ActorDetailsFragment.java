@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import mm.kso.movieapplication.BuildConfig;
 import mm.kso.movieapplication.utils.Constants;
 import mm.kso.movieapplication.adapters.KnownForMoviesAdapter;
 import mm.kso.movieapplication.databinding.FragmentActorDetailsBinding;
@@ -62,7 +63,7 @@ public class ActorDetailsFragment extends Fragment {
         personID = args.getPersonId();
 
         queries = new HashMap<>();
-        queries.put("api_key", Constants.API_KEY);
+        //queries.put("api_key", BuildConfig.MOVIE_API_KEY);
         queries.put("append_to_response", "movie_credits");
 
         viewModel.getActorDetails(personID, queries);

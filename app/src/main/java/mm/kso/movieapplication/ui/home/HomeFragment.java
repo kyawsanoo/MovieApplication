@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import mm.kso.movieapplication.BuildConfig;
 import mm.kso.movieapplication.utils.Constants;
 import mm.kso.movieapplication.adapters.HomeAdapter;
 import mm.kso.movieapplication.adapters.ViewPagerAdapter;
@@ -58,7 +59,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.progressBar.setVisibility(View.VISIBLE);
-        map.put("api_key", Constants.API_KEY);
         map.put("page", "1");
         observeData();
         setUpRecyclerViewsAndViewPager();

@@ -26,6 +26,8 @@ public class LoadingActivity extends Activity {
                 Intent i=new Intent(LoadingActivity.this, MainActivity.class);
                 startActivity(i);
                 finish();            }
+               
+            }
         }, 4600);
     }
 }
