@@ -1,32 +1,17 @@
-package mm.kso.movieapplication.viewmodels;
+package mm.kso.movieapplication.viewmodels
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.lifecycle.HiltViewModel;
-import mm.kso.movieapplication.db.FavoriteMovie;
-import mm.kso.movieapplication.repository.Repository;
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import mm.kso.movieapplication.db.FavoriteMovie
+import mm.kso.movieapplication.repository.Repository
+import javax.inject.Inject
 
 @HiltViewModel
-public class FavoriteViewModel extends ViewModel {
-    private Repository repository;
-    private LiveData<List<FavoriteMovie>> favoriteMoviesList;
-
-    @Inject
-    public FavoriteViewModel(Repository repository) {
-        this.repository = repository;
-        favoriteMoviesList = repository.getFavoriteList();
+class FavoriteViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
+    val favoriteMoviesList: LiveData<List<FavoriteMovie>> = repository.favoriteList
+    fun clearWishList() {
+        repository.clearFavoriteList()
     }
 
-    public LiveData<List<FavoriteMovie>> getFavoriteMoviesList() {
-        return favoriteMoviesList;
-    }
-
-    public void clearWishList(){
-        repository.clearFavoriteList();
-    }
 }

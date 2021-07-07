@@ -1,36 +1,35 @@
-package mm.kso.movieapplication.di;
+package mm.kso.movieapplication.di
 
-import android.app.Application;
-
-import androidx.room.Room;
-
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
-import mm.kso.movieapplication.utils.Constants;
-import mm.kso.movieapplication.db.FavoriteDao;
-import mm.kso.movieapplication.db.MovieDatabase;
+import android.app.Application
+import androidx.room.Room
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import mm.kso.movieapplication.db.FavoriteDao
+import mm.kso.movieapplication.db.MovieDatabase
+import mm.kso.movieapplication.utils.Constants
+import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent.class)
-public class DatabaseModule {
-
-
+@InstallIn(SingletonComponent::class)
+class DatabaseModule {
     @Provides
     @Singleton
-    MovieDatabase provideMovieDatabase(Application application){
-        return Room.databaseBuilder(application,MovieDatabase.class, Constants.DataBaseName)
-                .fallbackToDestructiveMigration()
-                .allowMainThreadQueries()
-                .build();
+    fun provideMovieDatabase(application: Application?): MovieDatabase {
+        return Room.databaseBuilder(
+            application!!,
+            MovieDatabase::class.java,
+            Constants.DataBaseName
+        )
+            .fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
+            .build()
     }
 
     @Provides
     @Singleton
-    FavoriteDao provideFavoriteDao(MovieDatabase movieDatabase){
-        return movieDatabase.favoriteDao();
+    fun provideFavoriteDao(movieDatabase: MovieDatabase): FavoriteDao {
+        return movieDatabase.favoriteDao()
     }
 }

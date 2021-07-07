@@ -1,56 +1,57 @@
-package mm.kso.movieapplication.di;
+package mm.kso.movieapplication.di
 
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
-import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
-import mm.kso.movieapplication.network.AuthInterceptor;
-import mm.kso.movieapplication.utils.Constants;
-import mm.kso.movieapplication.network.MovieApiService;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
+import mm.kso.movieapplication.network.AuthInterceptor
+import mm.kso.movieapplication.network.MovieApiService
+import mm.kso.movieapplication.utils.Constants
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent.class)
-public class NetworkModule {
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
+    @JvmStatic
     @Provides
     @Singleton
-    public static MovieApiService provideMovieApiService(Retrofit retrofit){
-        return  retrofit.create(MovieApiService.class);
+    fun provideMovieApiService(retrofit: Retrofit): MovieApiService {
+        return retrofit.create(MovieApiService::class.java)
     }
 
+    @JvmStatic
     @Provides
     @Singleton
-    public static Retrofit provideRetrofit(OkHttpClient okHttpClient) {
-        return new Retrofit.Builder()
-                .baseUrl(Constants.BaseURL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .client(okHttpClient)
-                .build();
-
+    fun provideRetrofit(okHttpClient: OkHttpClient?): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(Constants.BaseURL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .client(okHttpClient)
+            .build()
     }
 
+    @JvmStatic
     @Provides
     @Singleton
-    public static OkHttpClient provideOkHttpClient(AuthInterceptor authInterceptor){
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-
-        return new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .addInterceptor(authInterceptor)
-                .build();
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor?): OkHttpClient {
+        val logging = HttpLoggingInterceptor()
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
+        return OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .addInterceptor(authInterceptor!!)
+            .build()
     }
 
+    @JvmStatic
     @Provides
     @Singleton
-    public static AuthInterceptor provideAuthInterceptor(){
-        return new AuthInterceptor();
+    fun provideAuthInterceptor(): AuthInterceptor {
+        return AuthInterceptor()
     }
 }

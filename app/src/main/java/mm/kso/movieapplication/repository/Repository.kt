@@ -1,90 +1,75 @@
-package mm.kso.movieapplication.repository;
+package mm.kso.movieapplication.repository
 
-import android.util.Log;
+import android.util.Log
+import androidx.lifecycle.LiveData
+import com.google.gson.JsonObject
+import io.reactivex.rxjava3.core.Observable
+import mm.kso.movieapplication.db.FavoriteDao
+import mm.kso.movieapplication.db.FavoriteMovie
+import mm.kso.movieapplication.model.Actor
+import mm.kso.movieapplication.model.Movie
+import mm.kso.movieapplication.model.MovieResponse
+import mm.kso.movieapplication.network.MovieApiService
+import java.util.*
+import javax.inject.Inject
 
-import androidx.lifecycle.LiveData;
-
-import com.google.gson.JsonObject;
-
-import java.util.HashMap;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import io.reactivex.rxjava3.core.Observable;
-import mm.kso.movieapplication.db.FavoriteDao;
-import mm.kso.movieapplication.db.FavoriteMovie;
-import mm.kso.movieapplication.model.Actor;
-import mm.kso.movieapplication.model.Movie;
-import mm.kso.movieapplication.model.MovieResponse;
-import mm.kso.movieapplication.network.MovieApiService;
-
-public class Repository {
-    public static final String TAG = "Repository";
-
-    MovieApiService movieApiService;
-    FavoriteDao favoriteDao;
-
-    @Inject
-    public Repository(MovieApiService movieApiService, FavoriteDao favoriteDao) {
-        this.movieApiService = movieApiService;
-        this.favoriteDao = favoriteDao;
+class Repository @Inject constructor(
+    var movieApiService: MovieApiService,
+    var favoriteDao: FavoriteDao
+) {
+    fun getCurrentlyShowing(map: HashMap<String, String>): Observable<MovieResponse?>? {
+        return movieApiService.getCurrentlyShowing(map)
     }
 
-
-    public Observable<MovieResponse> getCurrentlyShowing(HashMap<String, String> map){
-        return movieApiService.getCurrentlyShowing(map);
+    fun getPopular(map: HashMap<String, String>): Observable<MovieResponse?>? {
+        return movieApiService.getPopular(map)
     }
 
-    public Observable<MovieResponse>  getPopular(HashMap<String, String> map){
-        return movieApiService.getPopular(map);
+    fun getTopRated(map: HashMap<String, String>): Observable<MovieResponse?>? {
+        return movieApiService.getTopRated(map)
     }
 
-    public Observable<MovieResponse>  getTopRated(HashMap<String, String> map){
-        return movieApiService.getTopRated(map);
+    fun getUpcoming(map: HashMap<String, String>): Observable<MovieResponse?>? {
+        return movieApiService.getUpcoming(map)
     }
 
-    public Observable<MovieResponse>  getUpcoming(HashMap<String, String> map){
-        return movieApiService.getUpcoming(map);
+    fun getMovieDetails(movieId: Int, map: HashMap<String?, String?>?): Observable<Movie?>? {
+        return movieApiService.getMovieDetails(movieId, map)
     }
 
-    public Observable<Movie>  getMovieDetails(int movieId, HashMap<String, String> map){
-        return movieApiService.getMovieDetails(movieId, map);
+    fun getCast(movieId: Int, map: HashMap<String?, String?>?): Observable<JsonObject?>? {
+        return movieApiService.getCast(movieId, map)
     }
 
-    public Observable<JsonObject>  getCast(int movieId, HashMap<String, String> map){
-        return movieApiService.getCast(movieId,map);
+    fun getActorDetails(personId: Int, map: HashMap<String?, String?>?): Observable<Actor?>? {
+        return movieApiService.getActorDetails(personId, map)
     }
 
-    public Observable<Actor>  getActorDetails(int personId, HashMap<String,String> map){
-        return movieApiService.getActorDetails(personId,map);
+    fun getMoviesBySearch(map: HashMap<String?, String?>?): Observable<JsonObject?>? {
+        return movieApiService.getMoviesBySearch(map)
     }
 
-    public Observable<JsonObject> getMoviesBySearch( HashMap<String, String> map){
-        return movieApiService.getMoviesBySearch(map);
-
+    fun insertMovie(favoriteMovie: FavoriteMovie) {
+        Log.e(TAG, "insertMovie: ")
+        favoriteDao.insert(favoriteMovie)
     }
 
-    public void insertMovie(FavoriteMovie favoriteMovie){
-        Log.e(TAG, "insertMovie: " );
-        favoriteDao.insert(favoriteMovie);
+    fun deleteMovie(movieId: Int) {
+        favoriteDao.delete(movieId)
     }
 
-    public void deleteMovie(int movieId){
-        favoriteDao.delete(movieId);
+    fun clearFavoriteList() {
+        favoriteDao.clearFavoriteList()
     }
 
-    public void clearFavoriteList(){
-        favoriteDao.clearFavoriteList();
+    val favoriteList: LiveData<List<FavoriteMovie>>
+        get() = favoriteDao.favoriteList
+
+    fun getFavoriteListMovie(movieId: Int): FavoriteMovie{
+        return favoriteDao.getFavoriteListMovie(movieId)
     }
 
-    public LiveData<List<FavoriteMovie>> getFavoriteList(){
-        return  favoriteDao.getFavoriteList();
+    companion object {
+        const val TAG = "Repository"
     }
-
-    public FavoriteMovie getFavoriteListMovie(int movieId){
-        return favoriteDao.getFavoriteListMovie(movieId);
-    }
-
-
 }

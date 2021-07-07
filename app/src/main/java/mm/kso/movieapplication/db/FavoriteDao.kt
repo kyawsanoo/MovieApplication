@@ -1,27 +1,24 @@
-package mm.kso.movieapplication.db;
+package mm.kso.movieapplication.db
 
-import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.Query;
-
-import java.util.List;
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
 
 @Dao
-public interface FavoriteDao {
-
+interface FavoriteDao {
     @Insert
-    void insert(FavoriteMovie favoriteMovie);
+    fun insert(favoriteMovie: FavoriteMovie)
 
     @Query("DELETE From favorite_table WHERE id = :movieId")
-    void delete(int movieId);
+    fun delete(movieId: Int)
 
     @Query("DELETE FROM favorite_table")
-    void clearFavoriteList();
+    fun clearFavoriteList()
 
-    @Query("SELECT * FROM favorite_table")
-    LiveData<List<FavoriteMovie>> getFavoriteList();
+    @get:Query("SELECT * FROM favorite_table")
+    val favoriteList: LiveData<List<FavoriteMovie>>
 
     @Query("SELECT * FROM favorite_table WHERE id = :movieId ")
-    FavoriteMovie getFavoriteListMovie(int movieId);
+    fun getFavoriteListMovie(movieId: Int): FavoriteMovie
 }

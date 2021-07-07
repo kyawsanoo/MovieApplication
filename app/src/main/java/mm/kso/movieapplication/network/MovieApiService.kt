@@ -1,40 +1,46 @@
-package mm.kso.movieapplication.network;
+package mm.kso.movieapplication.network
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonObject
+import io.reactivex.rxjava3.core.Observable
+import mm.kso.movieapplication.model.Actor
+import mm.kso.movieapplication.model.Movie
+import mm.kso.movieapplication.model.MovieResponse
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.QueryMap
+import java.util.*
 
-import java.util.HashMap;
-
-import io.reactivex.rxjava3.core.Observable;
-import mm.kso.movieapplication.model.Actor;
-import mm.kso.movieapplication.model.Movie;
-import mm.kso.movieapplication.model.MovieResponse;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
-
-public interface MovieApiService {
-
+interface MovieApiService {
     @GET("movie/now_playing")
-    Observable<MovieResponse> getCurrentlyShowing(@QueryMap HashMap<String,String> queries);
+    fun getCurrentlyShowing(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse?>?
 
     @GET("movie/popular")
-    Observable<MovieResponse> getPopular(@QueryMap HashMap<String,String> queries);
+    fun getPopular(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse?>?
 
     @GET("movie/upcoming")
-    Observable<MovieResponse> getUpcoming(@QueryMap HashMap<String,String> queries);
+    fun getUpcoming(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse?>?
 
     @GET("movie/top_rated")
-    Observable<MovieResponse> getTopRated(@QueryMap HashMap<String,String> queries);
+    fun getTopRated(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse?>?
 
     @GET("movie/{movie_id}")
-    Observable<Movie> getMovieDetails(@Path("movie_id") int id, @QueryMap HashMap<String,String> queries);
+    fun getMovieDetails(
+        @Path("movie_id") id: Int,
+        @QueryMap queries: HashMap<String?, String?>?
+    ): Observable<Movie?>?
 
     @GET("movie/{movie_id}/credits")
-    Observable<JsonObject> getCast(@Path ("movie_id") int id, @QueryMap HashMap<String,String> queries);
+    fun getCast(
+        @Path("movie_id") id: Int,
+        @QueryMap queries: HashMap<String?, String?>?
+    ): Observable<JsonObject?>?
 
     @GET("person/{person_id}")
-    Observable<Actor> getActorDetails(@Path ("person_id") int id, @QueryMap HashMap<String, String> queries);
+    fun getActorDetails(
+        @Path("person_id") id: Int,
+        @QueryMap queries: HashMap<String?, String?>?
+    ): Observable<Actor?>?
 
     @GET("search/movie")
-    Observable<JsonObject> getMoviesBySearch(@QueryMap HashMap<String,String> queries);
+    fun getMoviesBySearch(@QueryMap queries: HashMap<String?, String?>?): Observable<JsonObject?>?
 }

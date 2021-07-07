@@ -1,192 +1,162 @@
-package mm.kso.movieapplication.ui.detail;
+package mm.kso.movieapplication.ui.detail
 
-import android.annotation.SuppressLint;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.SharedElementCallback;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.google.gson.JsonArray;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import mm.kso.movieapplication.BuildConfig;
-import mm.kso.movieapplication.R;
-import mm.kso.movieapplication.utils.Constants;
-import mm.kso.movieapplication.adapters.CastAdapter;
-import mm.kso.movieapplication.databinding.FragmentMovieDetailsBinding;
-import mm.kso.movieapplication.db.FavoriteMovie;
-import mm.kso.movieapplication.model.Cast;
-import mm.kso.movieapplication.model.Movie;
-import mm.kso.movieapplication.viewmodels.MovieDetailsViewModel;
+import android.annotation.SuppressLint
+import android.os.Build
+import android.os.Bundle
+import android.provider.MediaStore.Video
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
+import mm.kso.movieapplication.R
+import mm.kso.movieapplication.adapters.CastAdapter
+import mm.kso.movieapplication.databinding.FragmentMovieDetailsBinding
+import mm.kso.movieapplication.db.FavoriteMovie
+import mm.kso.movieapplication.model.Cast
+import mm.kso.movieapplication.model.Movie
+import mm.kso.movieapplication.ui.detail.MovieDetailsFragment
+import mm.kso.movieapplication.utils.Constants
+import mm.kso.movieapplication.viewmodels.MovieDetailsViewModel
+import java.util.*
 
 @AndroidEntryPoint
-public class MovieDetailsFragment extends Fragment{
-
-    private static final String TAG = "MovieDetails";
-    private FragmentMovieDetailsBinding binding;
-    private MovieDetailsViewModel viewModel;
-    private Integer movieId;
-    private HashMap<String, String> queryMap;
-    private String temp,videoId;
-    private CastAdapter adapter;
-    private ArrayList<Cast> castList;
-    private int hour =0,min = 0;
-    private Movie mMovie;
-
-    private Boolean inFavList = false;
-    private ArrayList<MediaStore.Video> videos;
-
-    public MovieDetailsFragment() {
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentMovieDetailsBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
-        viewModel = new ViewModelProvider(MovieDetailsFragment.this).get(MovieDetailsViewModel.class);
-        return view;
+class MovieDetailsFragment : Fragment() {
+    
+    private var binding: FragmentMovieDetailsBinding? = null
+    private lateinit var viewModel: MovieDetailsViewModel
+    private var movieId: Int? = null
+    private lateinit var queryMap: HashMap<String?, String?>
+    private lateinit var temp: String
+    private lateinit var videoId: String
+    private lateinit var adapter: CastAdapter
+    private lateinit var castList: ArrayList<Cast>
+    private var hour = 0
+    private var min = 0
+    private lateinit var mMovie: Movie
+    private var inFavList = false
+    private val videos: ArrayList<Video>? = null
+    
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentMovieDetailsBinding.inflate(inflater, container, false)
+        val view = binding?.root
+        viewModel = ViewModelProvider(this@MovieDetailsFragment).get(
+            MovieDetailsViewModel::class.java
+        )
+        return view
     }
 
     @SuppressLint("RestrictedApi")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        setHasOptionsMenu(true);
-
-        castList = new ArrayList<>();
-        queryMap = new HashMap<>();
-
-        MovieDetailsFragmentArgs args = MovieDetailsFragmentArgs.fromBundle(getArguments());
-        movieId = args.getMovieId();
-
-        observeData();
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
+        castList = ArrayList()
+        queryMap = HashMap()
+        val args = MovieDetailsFragmentArgs.fromBundle(
+            arguments as Bundle
+        )
+        movieId = args.movieId
+        observeData()
         //queryMap.put("api_key", BuildConfig.MOVIE_API_KEY);
-        queryMap.put("page","1");
-        queryMap.put("append_to_response","videos");
-
-        viewModel.getMovieDetails(movieId,queryMap);
-        viewModel.getCast(movieId,queryMap);
-
-        binding.castRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,false));
-        adapter = new CastAdapter(getContext(),castList);
-        binding.castRecyclerView.setAdapter(adapter);
-        binding.moviePoster.setClipToOutline(true);
-
-        binding.addToFavoriteList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(inFavList){
-                    viewModel.deleteMovie(movieId);
-                    binding.addToFavoriteList.setImageResource(R.drawable.ic_playlist);
-                    Toast.makeText(getContext(),"Removed from Favorite List.",Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    FavoriteMovie movie = new FavoriteMovie(mMovie.getId(),mMovie.getPoster_path(),mMovie.getOverview(),
-                            mMovie.getRelease_date(),mMovie.getTitle(),mMovie.getBackdrop_path(),mMovie.getVote_count(),
-                            mMovie.getRuntime());
-                    viewModel.insertMovie(movie);
-                    binding.addToFavoriteList.setImageResource(R.drawable.ic_playlist_add);
-                    Toast.makeText(getContext(),"Added to Favorite List.",Toast.LENGTH_SHORT).show();
-                }
+        queryMap["page"] = "1"
+        queryMap["append_to_response"] = "videos"
+        viewModel.getMovieDetails(movieId!!, queryMap)
+        viewModel.getCast(movieId!!, queryMap)
+        binding?.castRecyclerView?.layoutManager =
+            LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        adapter = CastAdapter(requireContext(), castList)
+        binding?.castRecyclerView?.adapter = adapter
+        binding?.moviePoster?.clipToOutline = true
+        binding?.addToFavoriteList?.setOnClickListener {
+            if (inFavList) {
+                viewModel.deleteMovie(movieId!!)
+                binding?.addToFavoriteList?.setImageResource(R.drawable.ic_playlist)
+                Toast.makeText(context, "Removed from Favorite List.", Toast.LENGTH_SHORT).show()
+            } else {
+                val movie = FavoriteMovie(
+                    mMovie.id,
+                    mMovie.poster_path,
+                    mMovie.overview,
+                    mMovie.release_date,
+                    mMovie.title,
+                    mMovie.backdrop_path,
+                    mMovie.vote_count,
+                    mMovie.runtime
+                )
+                viewModel.insertMovie(movie)
+                binding?.addToFavoriteList?.setImageResource(R.drawable.ic_playlist_add)
+                Toast.makeText(context, "Added to Favorite List.", Toast.LENGTH_SHORT).show()
             }
-        });
-
+        }
     }
 
-    private void isMovieInFavList(int movieId) {
-        if(viewModel.getFavoriteListMovie(movieId) != null) {
-            binding.addToFavoriteList.setImageResource(R.drawable.ic_playlist_add);
-            inFavList = true;
+    private fun isMovieInFavList(movieId: Int) {
+        inFavList = if (viewModel.getFavoriteListMovie(movieId) != null) {
+            binding?.addToFavoriteList?.setImageResource(R.drawable.ic_playlist_add)
+            true
+        } else {
+            binding?.addToFavoriteList?.setImageResource(R.drawable.ic_playlist)
+            false
         }
-        else {
-            binding.addToFavoriteList.setImageResource(R.drawable.ic_playlist);
-            inFavList = false;
-        }
-        binding.addToFavoriteList.setVisibility(View.VISIBLE);
+        binding?.addToFavoriteList?.visibility = View.VISIBLE
     }
 
-    private void observeData() {
-        viewModel.getMovie().observe(getViewLifecycleOwner(), new Observer<Movie>() {
-            @Override
-            public void onChanged(Movie movie) {
-                mMovie = movie;
-                Glide.with(getContext()).load(Constants.ImageBaseURL + movie.getPoster_path())
-                        .centerCrop()
-                        .into(binding.moviePoster);
-
-                binding.movieName.setText(movie.getTitle());
-
-                hour = movie.getRuntime()/60;
-                min = movie.getRuntime()%60;
-                binding.movieRuntime.setText(hour+"h "+min+"m");
-                binding.moviePlot.setText(movie.getOverview());
-                temp = "";
-                for (int i = 0; i < movie.getGenres().size(); i++){
-                    if(i ==  movie.getGenres().size() -1)
-                        temp+= movie.getGenres().get(i).getName();
-                    else
-                        temp+= movie.getGenres().get(i).getName() + " • ";
-                }
-
-                binding.movieGenre.setText(temp);
-                binding.movieCastText.setVisibility(View.VISIBLE);
-                binding.moviePlotText.setVisibility(View.VISIBLE);
-                isMovieInFavList(movieId);
-
-                JsonArray array = movie.getVideos().getAsJsonArray("results");
-                videoId = array.get(0).getAsJsonObject().get("key").getAsString();
+    private fun observeData() {
+        viewModel!!.movie.observe(viewLifecycleOwner, { movie ->
+            mMovie = movie
+            Glide.with(requireContext()).load(Constants.ImageBaseURL + movie.poster_path)
+                .centerCrop()
+                .into(binding?.moviePoster!!)
+            binding?.movieName?.text = movie.title
+            hour = movie.runtime / 60
+            min = movie.runtime % 60
+            binding?.movieRuntime?.text = hour.toString() + "h " + min + "m"
+            binding?.moviePlot?.text = movie.overview
+            temp = ""
+            for (i in movie.genres.indices) {
+                temp += if (i == movie.genres.size - 1) movie.genres[i].name else movie.genres[i].name + " • "
             }
-        });
-
-        viewModel.getMovieCastList().observe(getViewLifecycleOwner(), new Observer<ArrayList<Cast>>() {
-            @Override
-            public void onChanged(ArrayList<Cast> actors) {
-                Log.e(TAG, "onChanged: " + actors.size() );
-                adapter.setCastList(actors);
-                adapter.notifyDataSetChanged();
-            }
-        });
+            binding?.movieGenre?.text = temp
+            binding?.movieCastText?.visibility = View.VISIBLE
+            binding?.moviePlotText?.visibility = View.VISIBLE
+            isMovieInFavList(movieId!!)
+            val array = movie.videos.getAsJsonArray("results")
+            videoId = array[0].asJsonObject["key"].asString
+        })
+        viewModel.movieCastList.observe(viewLifecycleOwner, Observer<ArrayList<Cast>> { actors ->
+            Log.e(TAG, "onChanged: " + actors.size)
+            adapter.setCastList(actors)
+            adapter.notifyDataSetChanged()
+        })
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-                requireActivity().onBackPressed();
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            requireActivity().onBackPressed()
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
- }
 
-
+    companion object {
+        private const val TAG = "MovieDetails"
+    }
+}

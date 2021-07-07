@@ -1,43 +1,32 @@
-package mm.kso.movieapplication;
+package mm.kso.movieapplication
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.WindowManager;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import mm.kso.movieapplication.databinding.ActivityMainBinding;
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import dagger.hilt.android.AndroidEntryPoint
+import mm.kso.movieapplication.databinding.ActivityMainBinding
 
 @AndroidEntryPoint
-public class MainActivity extends AppCompatActivity {
+class MainActivity : AppCompatActivity() {
 
-    private ActivityMainBinding binding;
+    private var binding: ActivityMainBinding? = null
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        setupNavigationUI();
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
+        setupNavigationUI()
     }
 
-    private void setupNavigationUI(){
-
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_favourite, R.id.navigation_search)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
-
+    private fun setupNavigationUI() {
+        val appBarConfiguration = AppBarConfiguration.Builder(
+            R.id.navigation_home, R.id.navigation_favourite, R.id.navigation_search
+        )
+            .build()
+        val navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main)
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
+        NavigationUI.setupWithNavController(binding?.navView!!, navController)
     }
-
 }

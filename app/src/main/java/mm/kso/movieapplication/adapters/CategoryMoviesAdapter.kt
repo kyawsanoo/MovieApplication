@@ -1,96 +1,66 @@
-package mm.kso.movieapplication.adapters;
+package mm.kso.movieapplication.adapters
 
-import android.content.Context;
-import android.os.Build;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.content.Context
+import android.os.Build
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import mm.kso.movieapplication.adapters.CategoryMoviesAdapter.CategoryMoviesViewHolder
+import mm.kso.movieapplication.databinding.MovieItemBinding
+import mm.kso.movieapplication.model.Movie
+import mm.kso.movieapplication.ui.movies.MoviesFragmentDirections
+import mm.kso.movieapplication.utils.Constants
+import mm.kso.movieapplication.utils.Constants.genreMap
+import java.util.*
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import java.util.ArrayList;
-
-import mm.kso.movieapplication.utils.Constants;
-import mm.kso.movieapplication.databinding.MovieItemBinding;
-import mm.kso.movieapplication.model.Movie;
-import mm.kso.movieapplication.ui.movies.MoviesFragmentDirections;
-
-public class CategoryMoviesAdapter extends RecyclerView.Adapter<CategoryMoviesAdapter.CategoryMoviesViewHolder> {
-
-    private MovieItemBinding binding;
-    private Context context;
-    private ArrayList<Movie> moviesList;
-    private String temp;
-
-    public CategoryMoviesAdapter(Context context, ArrayList<Movie> movieList) {
-        this.context = context;
-        this.moviesList = movieList;
+class CategoryMoviesAdapter(
+    private val context: Context,
+    private var moviesList: ArrayList<Movie>?
+) : RecyclerView.Adapter<CategoryMoviesViewHolder>() {
+    private var binding: MovieItemBinding? = null
+    private var temp: String? = null
+    fun setMovieList(movieList: ArrayList<Movie>?) {
+        moviesList = movieList
+        notifyDataSetChanged()
     }
 
-    public void setMovieList(ArrayList<Movie> movieList) {
-        this.moviesList = movieList;
-        notifyDataSetChanged();
-    }
-
-    @NonNull
-    @Override
-    public CategoryMoviesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        binding = MovieItemBinding.inflate(inflater, parent, false);
-        return new CategoryMoviesViewHolder(binding);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryMoviesViewHolder {
+        val inflater = LayoutInflater.from(context)
+        binding = MovieItemBinding.inflate(inflater, parent, false)
+        return CategoryMoviesViewHolder(binding!!)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void onBindViewHolder(@NonNull CategoryMoviesViewHolder holder, int position) {
-
-        holder.binding.movieName.setText(moviesList.get(position).getTitle());
-
-        temp = "";
-
-        for (int i = 0; i < moviesList.get(position).getGenre_ids().size(); i++){
-            if(i ==  moviesList.get(position).getGenre_ids().size() -1)
-                temp+= Constants.getGenreMap().get(moviesList.get(position).getGenre_ids().get(i));
-            else
-                temp+= Constants.getGenreMap().get(moviesList.get(position).getGenre_ids().get(i)) + " • ";
+    override fun onBindViewHolder(holder: CategoryMoviesViewHolder, position: Int) {
+        holder.binding.movieName.text = moviesList!![position].title
+        temp = ""
+        for (i in moviesList!![position].genre_ids.indices) {
+            temp += if (i == moviesList!![position].genre_ids.size - 1) genreMap[moviesList!![position].genre_ids[i]] else genreMap[moviesList!![position].genre_ids[i]].toString() + " • "
         }
-
-        holder.binding.movieGenre.setText(temp);
-        holder.binding.movieRating.setRating(moviesList.get(position).getVote_average().floatValue()/2);
-        String[] movieYear = moviesList.get(position).getRelease_date()
-                .split("-");
-        holder.binding.movieYear.setText(movieYear[0]);
-        Glide.with(context).load(Constants.ImageBaseURL + moviesList.get(position).getPoster_path())
-                .into(holder.binding.movieImage);
-
-        holder.binding.movieItemLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MoviesFragmentDirections.ActionMoviesToMovieDetails action =
-                        MoviesFragmentDirections.actionMoviesToMovieDetails(moviesList.get(position).getId());
-                Navigation.findNavController(view).navigate(action);
-            }
-        });
-
-
-        holder.binding.movieItemLayout.setClipToOutline(true);
-    }
-
-    @Override
-    public int getItemCount() {
-        return moviesList == null ? 0 : moviesList.size();
-    }
-
-    class CategoryMoviesViewHolder extends RecyclerView.ViewHolder {
-        private MovieItemBinding binding;
-
-        public CategoryMoviesViewHolder(MovieItemBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+        holder.binding.movieGenre.text = temp
+        holder.binding.movieRating.rating = moviesList!![position].vote_average.toFloat() / 2
+        val movieYear = moviesList!![position].release_date
+            .split("-").toTypedArray()
+        holder.binding.movieYear.text = movieYear[0]
+        Glide.with(context).load(Constants.ImageBaseURL + moviesList!![position].poster_path)
+            .into(holder.binding.movieImage)
+        holder.binding.movieItemLayout.setOnClickListener { view ->
+            val action = MoviesFragmentDirections.actionMoviesToMovieDetails(
+                moviesList!![position].id
+            )
+            Navigation.findNavController(view).navigate(action)
         }
+        holder.binding.movieItemLayout.clipToOutline = true
     }
+
+    override fun getItemCount(): Int {
+        return if (moviesList == null) 0 else moviesList!!.size
+    }
+
+    inner class CategoryMoviesViewHolder(val binding: MovieItemBinding) : RecyclerView.ViewHolder(
+        binding.root
+    )
 }
