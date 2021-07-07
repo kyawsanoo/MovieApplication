@@ -25,16 +25,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        if (savedInstanceState == null) {
-            Intent intent = new Intent(this, LoadingActivity.class);
-            startActivity(intent);
-
-        }
-        setupViewFragment();
+        setupNavigationUI();
 
     }
 
-    private void setupViewFragment(){
+    private void setupNavigationUI(){
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_favourite, R.id.navigation_search)
