@@ -2,6 +2,7 @@ package mm.kso.movieapplication.ui.movies;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -47,6 +48,7 @@ public class MoviesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
         map = new HashMap<>();
         MoviesFragmentArgs args = MoviesFragmentArgs.fromBundle(getArguments());
         moviesCategory = args.getMovieCategory();
@@ -129,5 +131,13 @@ public class MoviesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            requireActivity().onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
