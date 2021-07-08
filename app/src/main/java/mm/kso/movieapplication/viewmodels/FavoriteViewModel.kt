@@ -10,6 +10,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
     val favoriteMoviesList: LiveData<List<FavoriteMovie>> = repository.favoriteList
+
     fun clearWishList() {
         repository.clearFavoriteList()
     }

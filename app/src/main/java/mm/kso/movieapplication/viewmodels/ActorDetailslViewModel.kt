@@ -16,12 +16,13 @@ import javax.inject.Inject
 class ActorDetailslViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
     private val disposable = CompositeDisposable()
     val actor = MutableLiveData<Actor>()
-    fun getActorDetails(personId: Int, map: HashMap<String?, String?>?) {
+
+    fun getActorDetails(personId: Int, map: HashMap<String, String>) {
         disposable.add(
             repository.getActorDetails(personId, map)
-                ?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe(
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
                     { result: Actor? -> actor.setValue(result) }
                 ) { error: Throwable -> Log.e(TAG, "getActorDetails: " + error.message) }
         )

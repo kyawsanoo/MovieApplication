@@ -43,8 +43,8 @@ class FavoriteFragment : Fragment() {
         binding?.clearFavList?.setOnClickListener {
             viewModel.clearWishList()
             Toast.makeText(context, "Favorite List Cleared!", Toast.LENGTH_SHORT).show()
-            moviesList!!.clear()
-            adapter!!.setMoviesList(moviesList)
+            moviesList?.clear()
+            adapter?.setMoviesList(moviesList)
         }
     }
 
@@ -53,12 +53,12 @@ class FavoriteFragment : Fragment() {
             viewLifecycleOwner,
             Observer<List<FavoriteMovie>>{ favoriteMovies ->
                 if (favoriteMovies.size == 0) {
-                    binding!!.placeHolderText.visibility = View.VISIBLE
-                    binding!!.clearFavList.visibility = View.GONE
+                    binding?.placeHolderText?.visibility = View.VISIBLE
+                    binding?.clearFavList?.visibility = View.GONE
                 } else {
-                    binding!!.placeHolderText.visibility = View.GONE
-                    binding!!.clearFavList.visibility = View.VISIBLE
-                    adapter!!.setMoviesList(favoriteMovies)
+                    binding?.placeHolderText?.visibility = View.GONE
+                    binding?.clearFavList?.visibility = View.VISIBLE
+                    adapter?.setMoviesList(favoriteMovies)
                     moviesList = favoriteMovies as MutableList<FavoriteMovie>?
                 }
             }
@@ -66,9 +66,9 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun intiRecyclerView() {
-        binding!!.favListRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        binding?.favListRecyclerView?.layoutManager = GridLayoutManager(context, 2)
         adapter = FavoriteAdapter(requireContext(), moviesList)
-        binding!!.favListRecyclerView.adapter = adapter
+        binding?.favListRecyclerView?.adapter = adapter
     }
 
     override fun onDestroyView() {

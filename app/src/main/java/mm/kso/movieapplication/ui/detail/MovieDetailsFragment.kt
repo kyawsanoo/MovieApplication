@@ -34,8 +34,7 @@ class MovieDetailsFragment : Fragment() {
     
     private var binding: FragmentMovieDetailsBinding? = null
     private lateinit var viewModel: MovieDetailsViewModel
-    private var movieId: Int? = null
-    private lateinit var queryMap: HashMap<String?, String?>
+    private lateinit var queryMap: HashMap<String, String>
     private lateinit var temp: String
     private lateinit var videoId: String
     private lateinit var adapter: CastAdapter
@@ -44,8 +43,7 @@ class MovieDetailsFragment : Fragment() {
     private var min = 0
     private lateinit var mMovie: Movie
     private var inFavList = false
-    private val videos: ArrayList<Video>? = null
-    
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,19 +61,19 @@ class MovieDetailsFragment : Fragment() {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setHasOptionsMenu(true)
         castList = ArrayList()
         queryMap = HashMap()
         val args = MovieDetailsFragmentArgs.fromBundle(
             arguments as Bundle
         )
-        movieId = args.movieId
-        observeData()
-        //queryMap.put("api_key", BuildConfig.MOVIE_API_KEY);
+        val movieId: Int = args.movieId
+        observeData(movieId)
         queryMap["page"] = "1"
         queryMap["append_to_response"] = "videos"
-        viewModel.getMovieDetails(movieId!!, queryMap)
-        viewModel.getCast(movieId!!, queryMap)
+        viewModel.getMovieDetails(movieId, queryMap)
+        viewModel.getCast(movieId, queryMap)
         binding?.castRecyclerView?.layoutManager =
             LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         adapter = CastAdapter(requireContext(), castList)
@@ -83,7 +81,7 @@ class MovieDetailsFragment : Fragment() {
         binding?.moviePoster?.clipToOutline = true
         binding?.addToFavoriteList?.setOnClickListener {
             if (inFavList) {
-                viewModel.deleteMovie(movieId!!)
+                viewModel.deleteMovie(movieId)
                 binding?.addToFavoriteList?.setImageResource(R.drawable.ic_playlist)
                 Toast.makeText(context, "Removed from Favorite List.", Toast.LENGTH_SHORT).show()
             } else {
@@ -115,8 +113,8 @@ class MovieDetailsFragment : Fragment() {
         binding?.addToFavoriteList?.visibility = View.VISIBLE
     }
 
-    private fun observeData() {
-        viewModel!!.movie.observe(viewLifecycleOwner, { movie ->
+    private fun observeData(movieId: Int) {
+        viewModel.movie.observe(viewLifecycleOwner, { movie ->
             mMovie = movie
             Glide.with(requireContext()).load(Constants.ImageBaseURL + movie.poster_path)
                 .centerCrop()
@@ -124,7 +122,7 @@ class MovieDetailsFragment : Fragment() {
             binding?.movieName?.text = movie.title
             hour = movie.runtime / 60
             min = movie.runtime % 60
-            binding?.movieRuntime?.text = hour.toString() + "h " + min + "m"
+            binding?.movieRuntime?.text = "$hour h  $min m"
             binding?.moviePlot?.text = movie.overview
             temp = ""
             for (i in movie.genres.indices) {
@@ -133,7 +131,7 @@ class MovieDetailsFragment : Fragment() {
             binding?.movieGenre?.text = temp
             binding?.movieCastText?.visibility = View.VISIBLE
             binding?.moviePlotText?.visibility = View.VISIBLE
-            isMovieInFavList(movieId!!)
+            isMovieInFavList(movieId)
             val array = movie.videos.getAsJsonArray("results")
             videoId = array[0].asJsonObject["key"].asString
         })

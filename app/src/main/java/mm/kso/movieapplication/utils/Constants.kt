@@ -15,6 +15,7 @@ object Constants {
     const val Upcoming = "Upcoming"
     const val Current = "Current"
     const val TopRated = "TopRated"
+
     @JvmStatic
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     fun isNetworkAvailable(context: Context): Boolean {
@@ -23,10 +24,10 @@ object Constants {
         var isMobileConn = false
         for (network in connMgr.allNetworks) {
             val networkInfo = connMgr.getNetworkInfo(network)
-            if (networkInfo!!.type == ConnectivityManager.TYPE_WIFI) {
+            if (networkInfo?.type == ConnectivityManager.TYPE_WIFI) {
                 isWifiConn = isWifiConn or networkInfo.isConnected
             }
-            if (networkInfo.type == ConnectivityManager.TYPE_MOBILE) {
+            if (networkInfo?.type == ConnectivityManager.TYPE_MOBILE) {
                 isMobileConn = isMobileConn or networkInfo.isConnected
             }
         }

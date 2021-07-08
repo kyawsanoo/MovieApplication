@@ -20,8 +20,10 @@ class CategoryMoviesAdapter(
     private val context: Context,
     private var moviesList: ArrayList<Movie>?
 ) : RecyclerView.Adapter<CategoryMoviesViewHolder>() {
+
     private var binding: MovieItemBinding? = null
     private var temp: String? = null
+
     fun setMovieList(movieList: ArrayList<Movie>?) {
         moviesList = movieList
         notifyDataSetChanged()

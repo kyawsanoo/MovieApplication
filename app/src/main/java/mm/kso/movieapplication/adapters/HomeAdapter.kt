@@ -17,7 +17,9 @@ import java.util.*
 
 class HomeAdapter(private val context: Context, private var moviesList: ArrayList<Movie>?) :
     RecyclerView.Adapter<HomeViewHolder>() {
+
     private var binding: HomeItemBinding? = null
+
     fun setMoviesList(moviesList: ArrayList<Movie>?) {
         this.moviesList = moviesList
         notifyDataSetChanged()

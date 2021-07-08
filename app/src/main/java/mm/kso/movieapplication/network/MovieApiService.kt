@@ -12,35 +12,35 @@ import java.util.*
 
 interface MovieApiService {
     @GET("movie/now_playing")
-    fun getCurrentlyShowing(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse?>?
+    fun getCurrentlyShowing(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse>
 
     @GET("movie/popular")
-    fun getPopular(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse?>?
+    fun getPopular(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse>
 
     @GET("movie/upcoming")
-    fun getUpcoming(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse?>?
+    fun getUpcoming(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse>
 
     @GET("movie/top_rated")
-    fun getTopRated(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse?>?
+    fun getTopRated(@QueryMap queries: HashMap<String, String>): Observable<MovieResponse>
 
     @GET("movie/{movie_id}")
     fun getMovieDetails(
         @Path("movie_id") id: Int,
-        @QueryMap queries: HashMap<String?, String?>?
-    ): Observable<Movie?>?
+        @QueryMap queries: HashMap<String, String>
+    ): Observable<Movie>
 
     @GET("movie/{movie_id}/credits")
     fun getCast(
         @Path("movie_id") id: Int,
-        @QueryMap queries: HashMap<String?, String?>?
-    ): Observable<JsonObject?>?
+        @QueryMap queries: HashMap<String, String>
+    ): Observable<JsonObject>
 
     @GET("person/{person_id}")
     fun getActorDetails(
         @Path("person_id") id: Int,
-        @QueryMap queries: HashMap<String?, String?>?
-    ): Observable<Actor?>?
+        @QueryMap queries: HashMap<String, String>
+    ): Observable<Actor>
 
     @GET("search/movie")
-    fun getMoviesBySearch(@QueryMap queries: HashMap<String?, String?>?): Observable<JsonObject?>?
+    fun getMoviesBySearch(@QueryMap queries: HashMap<String, String>): Observable<JsonObject>
 }

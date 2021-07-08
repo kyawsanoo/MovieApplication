@@ -23,30 +23,30 @@ class SearchViewModel @Inject constructor(private val repository: Repository) : 
     val queriesMovies = MutableLiveData<ArrayList<Movie>>()
     private val actorDetails = MutableLiveData<Actor>()
 
-    fun getActorDetails(personId: Int, map: HashMap<String?, String?>?) {
+    fun getActorDetails(personId: Int, map: HashMap<String, String>) {
         val add = disposable.add(
             repository.getActorDetails(personId, map)
-                ?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe(
-                    { result: Actor -> actorDetails.setValue(result) } as ((Actor?) -> Unit)?
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result: Actor -> actorDetails.setValue(result) }
                 ) { error: Throwable -> Log.e(TAG, "getActorDetails: " + error.message) }
         )
     }
 
-    fun getQueriedMovies(map: HashMap<String?, String?>?) {
+    fun getQueriedMovies(map: HashMap<String, String>) {
         disposable.add(
             repository.getMoviesBySearch(map)
-                ?.subscribeOn(Schedulers.io())
-                ?.map<ArrayList<Movie>> { jsonObject ->
+                .subscribeOn(Schedulers.io())
+                .map<ArrayList<Movie>> { jsonObject ->
                     val jsonArray = jsonObject?.getAsJsonArray("results")
                     Gson().fromJson(
                         jsonArray.toString(),
                         object : TypeToken<ArrayList<Movie?>?>() {}.type
                     )
                 }
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe(
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
                     { result: ArrayList<Movie> -> queriesMovies.setValue(result) }
                 ) { error: Throwable -> Log.e(TAG, "getPopularMovies: " + error.message) }
         )

@@ -27,8 +27,7 @@ class ActorDetailsFragment : Fragment() {
 
     private var binding: FragmentActorDetailsBinding? = null
     private lateinit var viewModel: ActorDetailslViewModel
-    private var personID: Int? = null
-    private var queries: HashMap<String?, String?>? = null
+    private lateinit var queries: HashMap<String, String>
     private var adapter: KnownForMoviesAdapter? = null
     private var popularMovies: ArrayList<Movie>? = null
 
@@ -49,18 +48,17 @@ class ActorDetailsFragment : Fragment() {
         val args = ActorDetailsFragmentArgs.fromBundle(
             arguments as Bundle
         )
-        personID = args.personId
+        val personID: Int = args.personId
         queries = HashMap()
-        //queries.put("api_key", BuildConfig.MOVIE_API_KEY);
-        queries!!["append_to_response"] = "movie_credits"
-        viewModel.getActorDetails(personID!!, queries)
+        queries["append_to_response"] = "movie_credits"
+        viewModel.getActorDetails(personID, queries)
         viewModel.actor.observe(viewLifecycleOwner, { actor ->
             binding?.actorName?.text = actor.name
             binding?.actorBirthday?.text = actor.birthday
             binding?.actorBio?.text = actor.biography
             binding?.actorPlace?.text = actor.place_of_birth
             Glide.with(requireContext()).load(Constants.ImageBaseURL + actor.profile_path)
-                .into(binding!!.actorImage)
+                .into(binding?.actorImage!!)
             binding?.actorPopularity?.text = actor.popularity.toString() + ""
             binding?.actorBioText?.visibility = View.VISIBLE
             binding?.knownForText?.visibility = View.VISIBLE
@@ -70,7 +68,7 @@ class ActorDetailsFragment : Fragment() {
                 Gson().fromJson(array.toString(), object : TypeToken<ArrayList<Movie?>?>() {}.type)
             initKnownFor(popularMovies)
         })
-        binding!!.knownForRecyclerView.layoutManager =
+        binding?.knownForRecyclerView?.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
     }
 

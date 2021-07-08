@@ -18,8 +18,11 @@ import java.util.*
 
 class SearchAdapter(private val context: Context, private var moviesList: ArrayList<Movie>?) :
     RecyclerView.Adapter<SearchViewHolder>() {
+
     private var binding: MovieItemBinding? = null
+
     private var temp: String? = null
+
     fun setMoviesList(moviesList: ArrayList<Movie>?) {
         this.moviesList = moviesList
         notifyDataSetChanged()

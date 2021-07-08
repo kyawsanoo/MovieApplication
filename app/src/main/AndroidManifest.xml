@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="mm.kso.movieapplication" >
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         >
+
         <activity
             android:name=".LoadingActivity"
             android:label="@string/app_name"
@@ -24,8 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".MainActivity"
-            android:theme="@style/Theme.MovieApplication"     />
+            android:theme="@style/Theme.MovieApplication" />
+
     </application>
 
 </manifest>

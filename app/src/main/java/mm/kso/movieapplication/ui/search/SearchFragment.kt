@@ -22,7 +22,7 @@ class SearchFragment : Fragment() {
 
     private var binding: FragmentSearchBinding? = null
     private lateinit var viewModel: SearchViewModel
-    private var queryMap: HashMap<String?, String?>? = null
+    private lateinit var queryMap: HashMap<String, String>
     private var adapter: SearchAdapter? = null
     private val moviesList: ArrayList<Movie>? = null
     private var queryText = ""
@@ -41,40 +41,42 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         queryMap = HashMap()
-        queryMap!!["query"] = queryText
+        queryMap["query"] = queryText
         initRecyclerView()
         observeData()
         viewModel.getQueriedMovies(queryMap)
-        binding!!.searchMovie.setOnClickListener {
-            queryText = binding!!.searchKeyword.text.toString().trim { it <= ' ' }.toLowerCase()
-            queryMap?.clear()
-            //queryMap.put("api_key", BuildConfig.MOVIE_API_KEY);
-            queryMap!!["query"] = queryText
+
+        binding?.searchMovie?.setOnClickListener {
+            queryText = binding?.searchKeyword?.text.toString().trim { it <= ' ' }
+                .lowercase(Locale.getDefault())
+            queryMap.clear()
+            queryMap["query"] = queryText
             viewModel.getQueriedMovies(queryMap)
         }
-        binding!!.searchKeyword.setOnEditorActionListener { textView, actionId, keyEvent ->
+        binding?.searchKeyword?.setOnEditorActionListener { textView, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                queryText = binding!!.searchKeyword.text.toString().trim { it <= ' ' }.toLowerCase()
-                queryMap!!.clear()
+                queryText = binding?.searchKeyword?.text.toString().trim { it <= ' ' }
+                    .lowercase(Locale.getDefault())
+                queryMap.clear()
                 //queryMap.put("api_key", BuildConfig.MOVIE_API_KEY);
-                queryMap!!["query"] = queryText
-                viewModel!!.getQueriedMovies(queryMap)
+                queryMap["query"] = queryText
+                viewModel.getQueriedMovies(queryMap)
             }
             false
         }
     }
 
     private fun initRecyclerView() {
-        binding!!.searchMoviesRecyclerView.layoutManager =
+        binding?.searchMoviesRecyclerView?.layoutManager =
             StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
         adapter = SearchAdapter(requireContext(), moviesList)
-        binding!!.searchMoviesRecyclerView.adapter = adapter
+        binding?.searchMoviesRecyclerView?.adapter = adapter
     }
 
     private fun observeData() {
-        viewModel!!.queriesMovies.observe(
+        viewModel.queriesMovies.observe(
             viewLifecycleOwner,
-            Observer<ArrayList<Movie>> { movies -> adapter!!.setMoviesList(movies) })
+            Observer<ArrayList<Movie>> { movies -> adapter?.setMoviesList(movies) })
     }
 
     override fun onDestroyView() {

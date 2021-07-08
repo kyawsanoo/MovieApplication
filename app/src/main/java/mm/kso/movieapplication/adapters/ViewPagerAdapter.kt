@@ -19,7 +19,9 @@ import java.util.*
 
 class ViewPagerAdapter(private val context: Context, private var movieList: ArrayList<Movie>?) :
     RecyclerView.Adapter<ViewPagerViewHolder>() {
+
     private var binding: CuttentlyShowItemBinding? = null
+
     fun setMovieListResults(movieList: ArrayList<Movie>?) {
         this.movieList = movieList
         notifyDataSetChanged()

@@ -19,7 +19,9 @@ class KnownForMoviesAdapter(
     private val mContext: Context,
     private var moviesList: ArrayList<Movie>?
 ) : RecyclerView.Adapter<KnownForMoviesViewHolder>() {
+
     private var binding: HomeItemBinding? = null
+
     fun setMoviesList(moviesList: ArrayList<Movie>?) {
         this.moviesList = moviesList
         notifyDataSetChanged()

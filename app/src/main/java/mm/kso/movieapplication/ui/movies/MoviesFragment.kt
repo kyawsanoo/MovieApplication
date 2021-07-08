@@ -52,10 +52,10 @@ class MoviesFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        binding!!.moviesRecyclerView.layoutManager =
+        binding?.moviesRecyclerView?.layoutManager =
             StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
         adapter = CategoryMoviesAdapter(requireContext(), moviesList)
-        binding!!.moviesRecyclerView.adapter = adapter
+        binding?.moviesRecyclerView?.adapter = adapter
     }
 
     private fun observeData() {
@@ -75,19 +75,19 @@ class MoviesFragment : Fragment() {
         when (moviesCategory) {
             Constants.Current -> {
                 map.let { viewModel.getCurrentlyShowingMovies(it) }
-                binding!!.moviesCategoryTitle.text = Constants.Current
+                binding?.moviesCategoryTitle?.text = Constants.Current
             }
             Constants.Upcoming -> {
                 map.let { viewModel.getUpcomingMovies(it) }
-                binding!!.moviesCategoryTitle.text = Constants.Upcoming
+                binding?.moviesCategoryTitle?.text = Constants.Upcoming
             }
             Constants.TopRated -> {
                 map.let { viewModel.getTopRatedMovies(it) }
-                binding!!.moviesCategoryTitle.text = Constants.TopRated
+                binding?.moviesCategoryTitle?.text = Constants.TopRated
             }
             Constants.Popular -> {
                 map.let { viewModel.getPopularMovies(it) }
-                binding!!.moviesCategoryTitle.text = Constants.Popular
+                binding?.moviesCategoryTitle?.text = Constants.Popular
             }
         }
     }

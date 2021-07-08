@@ -15,8 +15,10 @@ import mm.kso.movieapplication.utils.Constants
 import java.util.*
 
 class CastAdapter(private val context: Context, private var castList: ArrayList<Cast>?) :
+
     RecyclerView.Adapter<CastViewModel>() {
     private var binding: CastItemBinding? = null
+
     fun setCastList(castList: ArrayList<Cast>?) {
         this.castList = castList
     }

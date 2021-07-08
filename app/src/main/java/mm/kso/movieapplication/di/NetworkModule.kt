@@ -1,5 +1,7 @@
 package mm.kso.movieapplication.di
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,6 +19,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
     @JvmStatic
     @Provides
     @Singleton
@@ -27,7 +30,7 @@ object NetworkModule {
     @JvmStatic
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient?): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Constants.BaseURL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -39,12 +42,12 @@ object NetworkModule {
     @JvmStatic
     @Provides
     @Singleton
-    fun provideOkHttpClient(authInterceptor: AuthInterceptor?): OkHttpClient {
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
         return OkHttpClient.Builder()
             .addInterceptor(logging)
-            .addInterceptor(authInterceptor!!)
+            .addInterceptor(authInterceptor)
             .build()
     }
 
@@ -54,4 +57,13 @@ object NetworkModule {
     fun provideAuthInterceptor(): AuthInterceptor {
         return AuthInterceptor()
     }
+
+    @JvmStatic
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        val gsonBuilder = GsonBuilder()
+        return gsonBuilder.create()
+    }
+
 }

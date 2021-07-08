@@ -20,5 +20,5 @@ interface FavoriteDao {
     val favoriteList: LiveData<List<FavoriteMovie>>
 
     @Query("SELECT * FROM favorite_table WHERE id = :movieId ")
-    fun getFavoriteListMovie(movieId: Int): FavoriteMovie
+    fun getFavoriteListMovie(movieId: Int): FavoriteMovie?
 }

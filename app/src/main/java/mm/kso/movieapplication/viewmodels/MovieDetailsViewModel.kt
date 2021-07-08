@@ -19,15 +19,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailsViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
+
     private val disposable = CompositeDisposable()
     val movie = MutableLiveData<Movie>()
     val movieCastList = MutableLiveData<ArrayList<Cast>>()
     private val actorDetails = MutableLiveData<Actor>()
-    fun getMovieDetails(movieId: Int, map: HashMap<String?, String?>?) {
+
+    fun getMovieDetails(movieId: Int, map: HashMap<String, String>) {
         disposable.add(
             repository.getMovieDetails(movieId, map)
-                ?.subscribeOn(Schedulers.io())
-                ?.map { movie ->
+                .subscribeOn(Schedulers.io())
+                .map { movie ->
                     val genreNames = ArrayList<String>()
                     // MovieResponse gives list of genre(object) so we will map each id to it genre name here.a
                     for (genre in movie!!.genres) {
@@ -36,43 +38,43 @@ class MovieDetailsViewModel @Inject constructor(private val repository: Reposito
                     movie.genre_names = genreNames
                     movie
                 }
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe(
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
                     { result: Movie? -> movie.setValue(result) }
                 ) { error: Throwable -> Log.e(TAG, "getMovieDetails: " + error.message) }
         )
     }
 
-    fun getCast(movieId: Int, map: HashMap<String?, String?>?) {
+    fun getCast(movieId: Int, map: HashMap<String, String>) {
         disposable.add(
             repository.getCast(movieId, map)
-                ?.subscribeOn(Schedulers.io())
-                ?.map { jsonObject ->
+                .subscribeOn(Schedulers.io())
+                .map { jsonObject ->
                     val jsonArray = jsonObject?.getAsJsonArray("cast")
                     Gson().fromJson<ArrayList<Cast>>(
                         jsonArray.toString(),
                         object : TypeToken<ArrayList<Cast?>?>() {}.type
                     )
                 }
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe(
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
                     { result: ArrayList<Cast> -> movieCastList.setValue(result) }
                 ) { error: Throwable -> Log.e(TAG, "getCastList: " + error.message) }
         )
     }
 
-    fun getActorDetails(personId: Int, map: HashMap<String?, String?>?) {
+    fun getActorDetails(personId: Int, map: HashMap<String, String>) {
         disposable.add(
             repository.getActorDetails(personId, map)
-                ?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe(
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
                     { result: Actor? -> actorDetails.setValue(result) }
                 ) { error: Throwable -> Log.e(TAG, "getActorDetails: " + error.message) }
         )
     }
 
-    fun getFavoriteListMovie(movieId: Int): FavoriteMovie {
+    fun getFavoriteListMovie(movieId: Int): FavoriteMovie? {
         return repository.getFavoriteListMovie(movieId)
     }
 

@@ -1,10 +1,13 @@
 package mm.kso.movieapplication.ui.home
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +24,7 @@ import mm.kso.movieapplication.utils.Constants.isNetworkAvailable
 import mm.kso.movieapplication.viewmodels.HomeViewModel
 import java.util.*
 
+
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
@@ -35,14 +39,12 @@ class HomeFragment : Fragment() {
     private val topRatedMovies: ArrayList<Movie>? = null
     private val upcomingMovies: ArrayList<Movie>? = null
     private val map = HashMap<String, String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(
             inflater,
             container,
@@ -50,11 +52,12 @@ class HomeFragment : Fragment() {
         )
         homeViewModel =
             ViewModelProvider(this@HomeFragment).get(HomeViewModel::class.java)
-        return binding?.root!!
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding?.progressBar?.visibility = View.VISIBLE
         map["page"] = "1"
         observeData()
@@ -69,6 +72,7 @@ class HomeFragment : Fragment() {
             moviesList
         }
     }
+
 
     private fun setUpRecyclerViewsAndViewPager() {
         currentMoviesAdapter = ViewPagerAdapter(requireContext(), currentMovies)

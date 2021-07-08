@@ -16,7 +16,9 @@ import mm.kso.movieapplication.utils.Constants
 
 class FavoriteAdapter(private val context: Context, private var moviesList: List<FavoriteMovie>?) :
     RecyclerView.Adapter<FavoriteViewHolder>() {
+
     private var binding: HomeItemBinding? = null
+
     fun setMoviesList(moviesList: List<FavoriteMovie>?) {
         this.moviesList = moviesList
         notifyDataSetChanged()

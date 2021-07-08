@@ -15,37 +15,37 @@ import javax.inject.Inject
 
 class Repository @Inject constructor(
     var movieApiService: MovieApiService,
-    var favoriteDao: FavoriteDao
+    private var favoriteDao: FavoriteDao
 ) {
-    fun getCurrentlyShowing(map: HashMap<String, String>): Observable<MovieResponse?>? {
+    fun getCurrentlyShowing(map: HashMap<String, String>): Observable<MovieResponse> {
         return movieApiService.getCurrentlyShowing(map)
     }
 
-    fun getPopular(map: HashMap<String, String>): Observable<MovieResponse?>? {
+    fun getPopular(map: HashMap<String, String>): Observable<MovieResponse>{
         return movieApiService.getPopular(map)
     }
 
-    fun getTopRated(map: HashMap<String, String>): Observable<MovieResponse?>? {
+    fun getTopRated(map: HashMap<String, String>): Observable<MovieResponse> {
         return movieApiService.getTopRated(map)
     }
 
-    fun getUpcoming(map: HashMap<String, String>): Observable<MovieResponse?>? {
+    fun getUpcoming(map: HashMap<String, String>): Observable<MovieResponse>{
         return movieApiService.getUpcoming(map)
     }
 
-    fun getMovieDetails(movieId: Int, map: HashMap<String?, String?>?): Observable<Movie?>? {
+    fun getMovieDetails(movieId: Int, map: HashMap<String, String>): Observable<Movie> {
         return movieApiService.getMovieDetails(movieId, map)
     }
 
-    fun getCast(movieId: Int, map: HashMap<String?, String?>?): Observable<JsonObject?>? {
+    fun getCast(movieId: Int, map: HashMap<String, String>): Observable<JsonObject> {
         return movieApiService.getCast(movieId, map)
     }
 
-    fun getActorDetails(personId: Int, map: HashMap<String?, String?>?): Observable<Actor?>? {
+    fun getActorDetails(personId: Int, map: HashMap<String, String>): Observable<Actor> {
         return movieApiService.getActorDetails(personId, map)
     }
 
-    fun getMoviesBySearch(map: HashMap<String?, String?>?): Observable<JsonObject?>? {
+    fun getMoviesBySearch(map: HashMap<String, String>): Observable<JsonObject> {
         return movieApiService.getMoviesBySearch(map)
     }
 
@@ -65,7 +65,7 @@ class Repository @Inject constructor(
     val favoriteList: LiveData<List<FavoriteMovie>>
         get() = favoriteDao.favoriteList
 
-    fun getFavoriteListMovie(movieId: Int): FavoriteMovie{
+    fun getFavoriteListMovie(movieId: Int): FavoriteMovie?{
         return favoriteDao.getFavoriteListMovie(movieId)
     }
 
