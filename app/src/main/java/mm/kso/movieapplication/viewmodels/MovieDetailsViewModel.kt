@@ -32,7 +32,7 @@ class MovieDetailsViewModel @Inject constructor(private val repository: Reposito
                 .map { movie ->
                     val genreNames = ArrayList<String>()
                     // MovieResponse gives list of genre(object) so we will map each id to it genre name here.a
-                    for (genre in movie!!.genres) {
+                    for (genre in movie.genres) {
                         genreNames.add(genre.name)
                     }
                     movie.genre_names = genreNames

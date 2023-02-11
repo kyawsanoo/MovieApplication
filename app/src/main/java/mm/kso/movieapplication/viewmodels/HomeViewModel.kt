@@ -30,15 +30,19 @@ class HomeViewModel @Inject constructor(private val repository: Repository) : Vi
         disposable.add(
             repository.getCurrentlyShowing(map)
                 .subscribeOn(Schedulers.io())
-                .map { movieResponse -> movieResponse?.results }
+                .map(fun(movieResponse: MovieResponse): ArrayList<Movie> {
+                    return movieResponse.results
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<ArrayList<Movie>>() {
 
-                    override fun onNext(movies: @NonNull ArrayList<Movie>?) {
-                        currentlyShowingList.setValue(movies)
+                    override fun onNext(movies: ArrayList<Movie>) {
+                        currentlyShowingList.value = movies
                     }
 
-                    override fun onError(e: @NonNull Throwable?) {}
+                    override fun onError(e: Throwable) {
+                    }
+
                     override fun onComplete() {}
 
                 })
